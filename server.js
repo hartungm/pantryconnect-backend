@@ -7,3 +7,9 @@ app.use(express.json());
 app.get("/", (req,res) => {
     res.status(200).send('Hello, please check out the documentation for more information on this API');
 });
+
+app.listen(port, () => {
+    console.log(`Server listening on port ${port}`);
+});
+
+module.exports = app;
