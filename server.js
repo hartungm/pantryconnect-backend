@@ -1,6 +1,8 @@
 const express = require('express');
 const app = express();
+require('dotenv').config();
 const port = process.env.PORT || 8000;
+const RecipeLookup = require('./recipe/recipe-search');
 
 app.use(express.json());
 
@@ -9,8 +11,16 @@ app.get("/", (req,res) => {
 });
 
 app.get('/search', (req,res) => {
-    var test = require("./sample-data/sample-recipe");
-    res.status(200).send(test);
+    var filter = req.query.filter;
+    var ingredients = req.body;
+    var recipeLookup = new RecipeLookup();
+    recipeLookup.lookupByIngredient(ingredients, filter, (err, recipes) => {
+        if(err) {
+            console.log(colors.error(err));
+            res.status(401).send(err);
+        }
+        res.status(200).send(recipes);
+    });
 });
 
 app.listen(port, () => {

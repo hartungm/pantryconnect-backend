@@ -9,7 +9,7 @@ module.exports = class RecipeLookup {
 
     lookupByIngredient(ingredients, filter, callback) {
         var self = this;
-        var filteredRecipes = [];        
+        var filteredRecipes = [];
         self.db.once('open', () => {
             var ingredientArray = RecipeLookup.getIngredientArrayFromIngredientList(ingredients)
             const recipeSchema = require('./schemas/recipe_schema');
