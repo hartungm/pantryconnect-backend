@@ -18,3 +18,31 @@ describe("Guide to documentation when root is accessed", () => {
         });
     });
 });
+
+describe("Get recipes from the database", () => {
+    it("Should return a test recipe", (done) => {
+        request(app)
+        .get('/search?filter=1')
+        .send({"ingredients": ["htest", "btest", "dtest", "ctest", "ltest", "ytest", "testets"]})
+        .set('Accept', 'application/json')
+        .expect('Content-Type', /json/)
+        .expect(200)
+        .end((err, res) => {
+            var testRecipe = require('../sample-data/sample-recipe');
+            expect(res.body.name).to.be.equal(testRecipe.name);
+            done();
+        });
+    });
+
+    it("Should error out when ingredients aren't passed to the method", (done) => {
+        request(app)
+        .get('/search')
+        .set('Accept', 'application/json')
+        .expect('Content-Type', /json/)
+        .expect(400)
+        .end((err, res) => {
+            expect(err).to.not.be.undefined
+            done();
+        });
+    });
+});
