@@ -12,11 +12,15 @@ app.get("/", (req,res) => {
 
 app.get('/search', (req,res) => {
     var filter = req.query.filter;
-    var ingredients = req.body;
+    var ingredients = req.body.ingredients;
+    if(ingredients === undefined) {
+        res.status(401).send('Ingredients missing or sent in an invalid format');
+        return;
+    }
     var recipeLookup = new RecipeLookup();
     recipeLookup.lookupByIngredient(ingredients, filter, (err, recipes) => {
         if(err) {
-            console.log(colors.error(err));
+            console.log(err);
             res.status(401).send(err);
         }
         res.status(200).send(recipes);

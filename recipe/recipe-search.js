@@ -12,14 +12,13 @@ module.exports = class RecipeLookup {
         var filteredRecipes = [];
         self.db.once('open', () => {
             var ingredientArray = RecipeLookup.getIngredientArrayFromIngredientList(ingredients)
-            const recipeSchema = require('./schemas/recipe_schema');
+            const recipeSchema = require('../schemas/recipe-schema');
             var RecipeModel = self.mongoose.model('Recipe', recipeSchema);
             RecipeModel.find({ingredients: { $in: ingredientArray}}).lean().exec( (err, doc) => {
                 if(err) {
                     callback(err,doc);
                     return;
                 }
-
                 doc.map(recipe => {
                     recipe = RecipeLookup.addRecipePercentage(recipe, ingredients);
                     if(recipe.matchPercentage >= filter) {
@@ -34,7 +33,7 @@ module.exports = class RecipeLookup {
     static addRecipePercentage(recipe, ingredients) {
         recipe.matchCount = 0;
         ingredients.map(ingredient => {
-            if(recipe.ingredients.includes(ingredient.name)) {
+            if(recipe.ingredients.includes(ingredient)) {
                 recipe.matchCount++;
             }
         });
@@ -47,7 +46,7 @@ module.exports = class RecipeLookup {
     static getIngredientArrayFromIngredientList(ingredients) {
         var ingredientArray = [];
         ingredients.map(ingredient => {
-            ingredientArray.push(ingredient.name);
+            ingredientArray.push(ingredient);
         });
         return ingredientArray;
     }

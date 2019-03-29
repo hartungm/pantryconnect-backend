@@ -29,7 +29,7 @@ describe("Get recipes from the database", () => {
         .expect(200)
         .end((err, res) => {
             var testRecipe = require('../sample-data/sample-recipe');
-            expect(res.body.name).to.be.equal(testRecipe.name);
+            expect(res.body[0].name).to.be.equal(testRecipe.name);
             done();
         });
     });
